@@ -7312,10 +7312,17 @@ namespace SDL2
 			out SDL_AudioSpec obtained,
 			int allowed_changes
 		) {
-			int utf8DeviceBufSize = Utf8Size(device);
-			byte* utf8Device = stackalloc byte[utf8DeviceBufSize];
+			byte* encodedUtf8Device = null;
+
+			if (device != null)
+			{
+				int utf8DeviceBufSize = Utf8Size(device);
+				byte* utf8Device = stackalloc byte[utf8DeviceBufSize];
+				encodedUtf8Device = Utf8Encode(device, utf8Device, utf8DeviceBufSize);
+			}
+
 			return INTERNAL_SDL_OpenAudioDevice(
-				Utf8Encode(device, utf8Device, utf8DeviceBufSize),
+				encodedUtf8Device,
 				iscapture,
 				ref desired,
 				out obtained,
